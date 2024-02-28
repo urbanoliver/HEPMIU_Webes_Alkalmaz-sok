@@ -1,0 +1,102 @@
+﻿@model IEnumerable<Order>
+@{
+
+}
+
+
+<div style="width:100%" class="mt-4">
+
+    <a href="/Identity/Account/Manage" class="btn btn-primary my-2">Vissza</a>
+
+
+    <h4>Rendeléseim</h4>
+    @if (Model != null && Model.Count() > 0)
+    {
+        <table class="table table-striped">
+
+            <tr>
+                <th>OrderDate</th>
+                <th>OrderStatus</th>
+            </tr>
+            @foreach (var order in Model)
+            {
+                <tr>
+                    <td>@order.CreateDate.ToString("dd-MM-yyyy")</td>
+                    <td>@order.OrderStatus.StatusName</td>
+                </tr>
+                @if (order.OrderDetail != null && order.OrderDetail.Count > 0)
+                {
+                    <tr>
+                        <td>
+                            <table class="table table-striped ">
+
+                                <tr>
+                                    <td>
+                                        Végösszeg:
+                                    </td>
+                                    <td>
+                                        @(order.OrderDetail.Select(item => item.Weapon.Price * item.Quantity).Sum())
+
+                                    </td>
+                                <tr />
+
+                                <tr>
+                                    <th>Fegyver</th>
+                                    <th>Kép</th>
+                                    <th>Fegyvernem</th>
+                                    <th>Egység Ár(Ft)</th>
+                                    <th>Db</th>
+                                    <th>Össz.Ár</th>
+                                    
+                                </tr>
+
+                                    @foreach (var item in order.OrderDetail)
+                                    {
+                                    <tr>
+                                        <td>@item.Weapon.WeaponName</td>
+                                        <td>
+                                                @if (string.IsNullOrEmpty(item.Weapon.WeaponImage))
+                                                {
+                                                <img style="width:50%; height:25%;" src="https://picsum.photos/300/300" class="card-img-top" alt="...">
+
+                                                }
+                                                else
+                                                {
+                                                <img style="width:50%; height:25%;" src="~/images/@item.Weapon.WeaponImage" class="card-img-top" alt="...">
+                                                }
+
+
+                                        </td>
+
+                                        <td>@item.Weapon.ArmyType.ArmyTypeName</td>
+                                        <td>@item.Weapon.Price</td>
+                                        <td>@item.Quantity</td>
+                                        <td>@(item.Weapon.Price * item.Quantity)</td>
+
+
+                                    </tr>
+
+
+                                    }
+
+
+                            </table>
+                        </td>
+                    </tr>
+                    <tr />
+                }
+            }
+
+        </table>
+
+
+
+
+    }
+    else
+    {
+        <h5>Nincs Rendelés!</h5>
+    }
+
+
+</div>

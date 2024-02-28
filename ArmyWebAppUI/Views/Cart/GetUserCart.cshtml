@@ -1,0 +1,74 @@
+﻿@model ShoppingCart
+@{
+    ViewData["Title"] = "GetUserCart";
+}
+
+<div style="width:100%" class="mt-2">
+
+    @if(Model != null && Model.CartDetails!=null && Model.CartDetails.Count > 0){
+
+        <h5>Kosár</h5>
+
+        <table class="table table-striped ">
+    
+            <tr>
+                <th>Fegyver</th>
+                <th>Kép</th>
+                <th>Fegyvernem</th>
+                <th>Egység Ár(Ft)</th>
+                <th>Db</th>
+                <th>Össz.Ár</th>
+                <th>Műveletek</th>
+            </tr>
+
+            @foreach(var item in Model.CartDetails)
+            {
+                <tr>
+                    <td>@item.Weapon.WeaponName</td>
+                    <td>
+                            @if (string.IsNullOrEmpty(item.Weapon.WeaponImage))
+                            {
+                                <img style="width:50%; height:25%;" src="https://picsum.photos/300/300" class="card-img-top" alt="...">
+
+                            }
+                            else
+                            {
+                                <img style="width:50%; height:25%;" src="~/images/@item.Weapon.WeaponImage" class="card-img-top" alt="...">
+                            }
+
+
+                    </td>
+                    <td>@item.Weapon.ArmyType.ArmyTypeName</td>
+                    <td>@item.Weapon.Price</td>
+                    <td>@item.Quantity</td>
+                    <td>@(item.Weapon.Price*item.Quantity)</td>
+                    <td>
+                        <a class="btn btn-info" href="/Cart/AddItem?weaponId=@item.WeaponId&&redirect=1">+</a>
+                        <a class="btn btn-info" href="/cart/removeitem?weaponid=@item.WeaponId">-</a>
+                    </td>
+
+                </tr>
+                            
+
+        }
+
+        </table>
+
+        <div class="my-2">
+
+            <h5>Total(Ft): </h5> 
+            @(Model.CartDetails.Select(item =>item.Weapon.Price*item.Quantity).Sum())
+        </div>
+
+        <div class="my-2">
+            <a class="btn btn-primary" href="/Cart/Checkout">Checkout</a>
+        </div>
+    }
+    else
+    {
+        <h5>Kosár üres!</h5>    
+    }
+
+
+</div>
+

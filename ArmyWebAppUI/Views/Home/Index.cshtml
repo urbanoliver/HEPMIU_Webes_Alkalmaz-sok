@@ -1,0 +1,102 @@
+﻿@model WeaponDisplayModel
+
+@{
+   
+   
+}
+
+<div class ="my-2">
+    
+  <form asp-action="Index" class="row row-cols-lg-auto g-3 align-items-center">
+ 
+
+  <div class="col-12">
+    <label class="visually-hidden" for="armytypesID">Fegyvernem</label>
+    <select class="form-select" id="armytypeId" name="armytypeID">
+      <option selected>Fegyvernem</option>
+      @foreach(var armytypes in Model.ArmyTypes)
+      {
+      <option selected="@(armytypes.Id == Model.ArmyTypeId)" value="@armytypes.Id">@armytypes.ArmyTypeName</option>
+      }
+      
+    </select>
+  </div>
+
+        <div class="col-12">
+            <label class="visually-hidden" for="sTerm">Fegyvernév</label>
+            <div class="input-group">
+                <div class="input-group-text"></div>
+                <input type="text" class="form-control" value="@Model.STerm" id="sTerm" name="sTerm" placeholder="Fegyvernév">
+            </div>
+        </div>
+
+
+  <div class="col-12">
+    <button type="submit" class="btn btn-primary">Keresés</button>
+    <a href="/Home/Index" class="btn btn-primary">Töröl</a>
+  </div>
+</form>
+
+</div>
+
+
+
+
+<div class="w-100 mt-4 d-flex flex-wrap">
+
+    @foreach(var weapon in Model.Weapons)
+    {
+        <div class="card mx-2 mt-4 mb-4" style="width: 16rem;">
+            @if (string.IsNullOrEmpty(weapon.WeaponImage))
+            {
+                <img style="width:100%; height:300px;" src="https://picsum.photos/300/300" class="card-img-top" alt="...">
+            
+            }
+            else
+            {
+                <img style="width:100%; height:auto;" src="~/images/@weapon.WeaponImage" class="card-img-top" alt="...">
+            }
+         
+            <div class="card-body">
+                <h5 class="card-title">@weapon.WeaponName</h5>
+                <p class="card-text">
+                    Gyártó:@weapon.ManufacturerName
+                    <br>
+                     Ár:@weapon.Price
+                    <br>
+                    Fegyvernem:@weapon.ArmyTypeName
+                </p>
+                <button type="button" onclick="add(@weapon.Id)"  class="btn btn-primary" style="position:relative;">Hozzáadás a Kosárhoz</button>
+            </div>
+
+
+        </div>
+    }
+</div>
+
+@section Scripts
+{
+    <script>
+        async function add(weaponId) {
+
+
+            try {
+                var response = await fetch(`/Cart/AddItem?weaponId=${weaponId}`);
+                if (response.status == 200) {
+                    var result = await response.json();
+
+                    var cartCountEl = document.getElementById("cartCount");
+                    cartCountEl.innerHTML = result;
+                    window.location.href = "#cartCount";
+
+                }
+            }
+            catch (err) {
+                console.log(err);
+            }
+        }
+
+    </script>
+}
+
+
